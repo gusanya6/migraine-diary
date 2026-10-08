@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f6687">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Мигрень в деталях">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Дневник головной боли — Мигрень в деталях</title>
+<style>
+:root{
+  --navy:#154B69; --blue:#2D96C4; --blue2:#0F6687; --sky:#EAF5FA;
+  --bg:#F5FAFC; --white:#FFF; --line:#C7E1EC; --text:#173F55;
+  --muted:#647C89; --green:#2F7E66; --greenbg:#EDF8F3; --red:#B64949;
+  --redbg:#FFF3F3; --shadow:0 10px 30px rgba(20,76,105,.08); --r:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.wrap{max-width:920px;margin:auto;padding:12px 12px 92px}
+.hero,.card{background:var(--white);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:22px 18px;margin-bottom:12px;background:linear-gradient(145deg,#fff,#eff9fd)}
+.brand{text-align:center;font-size:27px;font-weight:800;letter-spacing:-.5px;color:var(--navy)}
+.brand span{color:var(--blue)}
+.tag{text-align:center;color:var(--muted);font-size:13px;margin-top:3px}
+.hero h1{font-size:23px;line-height:1.18;margin:20px 0 7px}
+.hero p{margin:0;color:var(--muted);line-height:1.45;font-size:14px}
+.privacy{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:#fff;color:var(--muted);font-size:12px;line-height:1.4}
+.card{padding:16px;margin-top:12px}
+.section-title{font-size:19px;margin:0 0 14px}
+.sub{font-size:12px;color:var(--muted);line-height:1.4}
+.tabbar{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:rgba(245,250,252,.93);backdrop-filter:blur(8px);padding:6px;border-radius:15px;margin-bottom:12px}
+.tabbar button{border:1px solid var(--line);background:#fff;color:var(--navy);min-height:42px;border-radius:11px;font-weight:750}
+.tabbar button.active{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.panel{display:none}.panel.active{display:block}
+.daynav{display:grid;grid-template-columns:42px 1fr 42px;gap:8px;align-items:center}
+.daynav button{height:44px;border:1px solid var(--line);border-radius:12px;background:var(--sky);color:var(--navy);font-weight:800;font-size:20px}
+.control{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);padding:11px 12px;outline:none}
+.control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,150,196,.13)}
+.field{margin-top:17px}
+.label{font-weight:760;margin-bottom:8px;display:block;line-height:1.3}
+.seg2,.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg input,.chip input{display:none}
+.seg label{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--line);border-radius:12px;background:#f8fcfe;color:var(--navy);font-weight:760}
+.seg input:checked+label{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.rangegrid{display:grid;grid-template-columns:1fr 58px;gap:10px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--blue2)}
+.badge{height:44px;border:1px solid var(--line);border-radius:11px;background:#f8fcfe;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chip label{min-height:43px;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:#f8fcfe;font-size:14px;line-height:1.2}
+.chip label:before{content:"";width:17px;height:17px;flex:0 0 17px;border:2px solid #8cb8c9;border-radius:5px;background:#fff}
+.chip input:checked+label{border-color:var(--blue);background:#eef9fd}
+.chip input:checked+label:before{background:var(--blue2);border-color:var(--blue2);box-shadow:inset 0 0 0 4px #fff}
+textarea.control{min-height:86px;resize:vertical}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.btn{min-height:47px;border-radius:13px;padding:0 12px;border:0;font-weight:800}
+.primary{background:var(--blue2);color:#fff}.secondary{background:var(--sky);color:var(--navy);border:1px solid var(--line)}.danger{background:var(--redbg);color:var(--red);border:1px solid #efcccc}
+.success{background:var(--greenbg);color:var(--green);border:1px solid #cfe7dc}
+.status{min-height:20px;margin-top:9px;font-size:12px;color:var(--green)}
+.hidden{display:none!important}
+.nopain{margin-top:12px;padding:11px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:13px;background:#f8fcfe}
+.calendar-head{display:grid;grid-template-columns:42px 1fr 42px;gap:8px;margin-bottom:12px}
+.calendar-head button{border:1px solid var(--line);background:var(--sky);border-radius:12px;color:var(--navy);font-weight:800}
+.month-title{display:flex;align-items:center;justify-content:center;font-weight:800}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.weekdays div{text-align:center;color:var(--muted);font-size:11px;padding:4px 0}
+.daycell{aspect-ratio:1/1;border:1px solid var(--line);border-radius:11px;background:#fff;padding:6px;position:relative;color:var(--navy);font-weight:750;min-height:54px}
+.daycell.muted{opacity:.35}
+.daycell.today{outline:2px solid rgba(45,150,196,.45)}
+.daycell.pain{background:#eef8fc;border-color:#9acfe3}
+.daycell.nopaincell{background:#f0f8f4;border-color:#c7e5d7}
+.daycell .dot{position:absolute;bottom:7px;left:7px;width:7px;height:7px;border-radius:50%;background:var(--blue2)}
+.daycell.nopaincell .dot{background:var(--green)}
+.daycell .score{position:absolute;right:6px;bottom:4px;font-size:11px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}.ld{width:9px;height:9px;border-radius:50%;background:var(--blue2)}.ld.green{background:var(--green)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:#f8fcfe;border:1px solid var(--line);border-radius:13px;padding:11px;min-height:86px}
+.stat span{font-size:11px;color:var(--muted);line-height:1.25}.stat strong{display:block;font-size:24px;color:var(--navy);margin-top:7px}
+.sidegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.side{border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;background:#fff}.side b{display:block;font-size:18px;margin-top:5px;color:var(--navy)}
+.records{margin-top:11px}.record{display:grid;grid-template-columns:74px 1fr 40px;gap:8px;align-items:center;border-top:1px solid #e3eef3;padding:10px 0}.record:first-child{border-top:0}.rd{font-weight:800}.rm{font-size:12px;color:var(--muted);line-height:1.35}.iconbtn{height:38px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy)}
+.tools{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.tools .btn{min-height:41px;font-size:13px}
+.report{display:none}
+.install{margin-top:12px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#f8fcfe;font-size:12px;color:var(--muted);line-height:1.45}
+.footer{text-align:center;color:var(--muted);font-size:11px;line-height:1.5;padding:16px 10px}
+@media(max-width:680px){.summary-grid{grid-template-columns:1fr 1fr}.sidegrid{grid-template-columns:1fr}.wrap{padding:10px 10px 90px}.hero,.card{border-radius:18px}}
+@media(max-width:430px){.grid2,.actions,.chips{grid-template-columns:1fr}.brand{font-size:24px}.hero h1{font-size:21px}.tabbar button{font-size:13px}.daycell{min-height:48px;padding:5px}.summary-grid{grid-template-columns:1fr 1fr}}
+@media print{
+  body{background:#fff}.wrap{max-width:none;padding:0}.hero,.tabbar,.panel,.footer{display:none!important}.report{display:block!important;border:0;box-shadow:none;margin:0;padding:0}.report table{width:100%;border-collapse:collapse;font-size:9px}.report th,.report td{border:1px solid #bcd9e5;padding:5px;vertical-align:top}.report h1,.report h2{color:#154B69}.no-print{display:none!important}
+}
+
+.control{min-width:0;max-width:100%;font-size:16px;min-height:44px}
+.daynav{grid-template-columns:44px minmax(0,1fr) 44px}
+.calendar-head button,.tabbar button,.tools .btn,.iconbtn{min-height:44px}
+.chip label{min-height:44px}.record{grid-template-columns:74px minmax(0,1fr) 44px}.rm{overflow-wrap:anywhere}
+.seg input,.chip input{display:block;position:absolute;opacity:0;width:1px;height:1px}
+.seg input:focus-visible+label,.chip input:focus-visible+label{outline:3px solid var(--blue)}
+.calendar{gap:3px;grid-template-columns:repeat(7,minmax(0,1fr))}.daycell{min-width:0;min-height:44px;padding:2px}
+.report.preview{display:block;overflow-wrap:anywhere}.report.preview table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:12px}
+.report td,.report th{border:1px solid var(--line);padding:6px;overflow-wrap:anywhere}
+@media print{.report table{table-layout:fixed}.report tr{break-inside:avoid}.report thead{display:table-header-group}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="brand">Мигрень <span>в деталях</span></div>
+    <div class="tag">дневник головной боли</div>
+    <h1>Одна короткая запись в день — понятная статистика за месяц</h1>
+    <p>Фиксируйте головную боль, локализацию, симптомы и лекарства. Дневник автоматически соберёт месячную картину, которую можно показать врачу.</p>
+    <div class="privacy">🔒 В этой тестовой версии данные хранятся только в браузере на вашем устройстве и не отправляются на сервер. Регулярно сохраняйте резервную копию: очистка данных браузера удалит записи. Данные в Safari и приложении на экране «Домой» могут храниться отдельно.</div>
+  </section>
+
+  <nav class="tabbar no-print">
+    <button data-tab="today" class="active">Сегодня</button>
+    <button data-tab="calendar">Календарь</button>
+    <button data-tab="summary">Итоги</button>
+  </nav>
+
+  <section class="panel active" id="today">
+    <div class="card">
+      <h2 class="section-title">Запись за день</h2>
+      <div class="daynav">
+        <button id="prevDay" aria-label="Предыдущий день">‹</button>
+        <input class="control" id="entryDate" type="date">
+        <button id="nextDay" aria-label="Следующий день">›</button>
+      </div>
+
+      <div class="field">
+        <span class="label">Была ли сегодня головная боль?</span>
+        <div class="seg2">
+          <div class="seg"><input type="radio" name="hadPain" id="painYes" value="yes"><label for="painYes">Да</label></div>
+          <div class="seg"><input type="radio" name="hadPain" id="painNo" value="no"><label for="painNo">Нет</label></div>
+        </div>
+      </div>
+
+      <div id="painFields">
+        <div class="field">
+          <span class="label">Интенсивность <span class="sub">0 — нет боли, 10 — максимально сильная</span></span>
+          <div class="rangegrid">
+            <input type="range" id="intensity" min="0" max="10" value="5">
+            <div class="badge" id="intensityOut">5</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Время приступа</span>
+          <div class="grid2">
+            <div><span class="sub">Начало</span><input class="control" id="startTime" type="time"></div>
+            <div><span class="sub">Окончание</span><input class="control" id="endTime" type="time"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Локализация боли <span class="sub">можно выбрать несколько вариантов</span></span>
+          <div class="chips" id="locationGrid">
+            <div class="chip"><input id="locForehead" type="checkbox" value="Лобная область"><label for="locForehead">Лобная область</label></div>
+            <div class="chip"><input id="locTemple" type="checkbox" value="Височная область"><label for="locTemple">Височная область</label></div>
+            <div class="chip"><input id="locOcciput" type="checkbox" value="Затылочная область"><label for="locOcciput">Затылочная область</label></div>
+            <div class="chip"><input id="locRight" type="checkbox" value="Правая сторона головы"><label for="locRight">Правая сторона головы</label></div>
+            <div class="chip"><input id="locLeft" type="checkbox" value="Левая сторона головы"><label for="locLeft">Левая сторона головы</label></div>
+            <div class="chip"><input id="locAll" type="checkbox" value="Вся голова"><label for="locAll">Вся голова</label></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Характер боли <span class="sub">необязательно</span></span>
+          <div class="chips" id="characterGrid">
+            <div class="chip"><input id="charPulse" type="checkbox" value="Пульсирующая"><label for="charPulse">Пульсирующая</label></div>
+            <div class="chip"><input id="charPress" type="checkbox" value="Давящая / сжимающая"><label for="charPress">Давящая / сжимающая</label></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Усиливалась при обычной физической активности?</span>
+          <div class="seg2">
+            <div class="seg"><input type="radio" name="activity" id="actYes" value="yes"><label for="actYes">Да</label></div>
+            <div class="seg"><input type="radio" name="activity" id="actNo" value="no"><label for="actNo">Нет</label></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Дополнительные симптомы</span>
+          <div class="chips" id="symptomGrid">
+            <div class="chip"><input id="symPhoto" type="checkbox" value="Светобоязнь"><label for="symPhoto">Светобоязнь</label></div>
+            <div class="chip"><input id="symPhono" type="checkbox" value="Звукобоязнь"><label for="symPhono">Звукобоязнь</label></div>
+            <div class="chip"><input id="symNausea" type="checkbox" value="Тошнота"><label for="symNausea">Тошнота</label></div>
+            <div class="chip"><input id="symVomit" type="checkbox" value="Рвота"><label for="symVomit">Рвота</label></div>
+            <div class="chip"><input id="symAura" type="checkbox" value="Аура"><label for="symAura">Аура</label></div>
+            <div class="chip"><input id="symDizzy" type="checkbox" value="Головокружение"><label for="symDizzy">Головокружение</label></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Принятые лекарства</span>
+          <input class="control" id="medName" type="text" placeholder="Название, доза, время приёма">
+          <div style="height:8px"></div>
+          <select class="control" id="medEffect">
+            <option value="">Эффект от препарата</option>
+            <option>Помог полностью</option>
+            <option>Помог частично</option>
+            <option>Не помог</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <span class="label">Триггеры / примечания</span>
+          <textarea class="control" id="notes" placeholder="Например: стресс, недосып, менструация, погода, пропуск еды..."></textarea>
+        </div>
+      </div>
+
+      <div id="noPainHint" class="nopain hidden">Если боли не было, просто сохраните день. Такие записи нужны, чтобы корректно считать дни без головной боли.</div>
+
+      <div class="actions">
+        <button class="btn primary" id="saveBtn">Сохранить день</button>
+        <button class="btn danger" id="deleteBtn">Удалить запись</button>
+      </div>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="calendar">
+    <div class="card">
+      <h2 class="section-title">Календарь</h2>
+      <div class="calendar-head">
+        <button id="prevMonth">‹</button>
+        <div class="month-title" id="calendarMonthTitle"></div>
+        <button id="nextMonth">›</button>
+      </div>
+      <div class="weekdays"><div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div></div>
+      <div class="calendar" id="calendarGrid"></div>
+      <div class="legend"><span><i class="ld"></i> головная боль</span><span><i class="ld green"></i> боли не было</span><span>число внизу — интенсивность</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="summary">
+    <div class="card">
+      <h2 class="section-title">Итоги месяца</h2>
+      <div class="grid2" style="margin-bottom:12px">
+        <div><span class="sub">Месяц</span><input class="control" id="monthPicker" type="month"></div>
+        <div><span class="sub">Заполнено дней</span><div class="badge" id="filledDays">0</div></div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="stat"><span>Дни с головной болью</span><strong id="sumPainDays">0</strong></div>
+        <div class="stat"><span>Средняя интенсивность</span><strong id="sumAvgIntensity">—</strong></div>
+        <div class="stat"><span>Дни приёма лекарств</span><strong id="sumMedDays">0</strong></div>
+        <div class="stat"><span>Дни без головной боли</span><strong id="sumPainFree">0</strong></div>
+      </div>
+
+      <div class="sidegrid">
+        <div class="side">Отмечена правая сторона<b id="sumRight">0</b></div>
+        <div class="side">Отмечена левая сторона<b id="sumLeft">0</b></div>
+        <div class="side">Отмечена вся голова<b id="sumAll">0</b></div>
+      </div>
+
+      <div class="records" id="records"></div>
+
+      <div class="tools">
+        <button class="btn secondary" id="doctorReport">Отчёт для врача</button>
+        <button class="btn secondary" id="exportCsv">Скачать CSV</button>
+        <button class="btn secondary" id="exportJson">Резервная копия</button>
+        <label class="btn secondary" style="display:inline-flex;align-items:center;justify-content:center">
+          Восстановить
+          <input id="importJson" type="file" accept=".json,application/json" style="display:none">
+        </label>
+      </div>
+
+      <div class="install">
+        <b>Для использования как приложение:</b> после публикации сайта по HTTPS на iPhone его можно добавить на экран «Домой» через меню «Поделиться» → «На экран Домой». После этого дневник будет открываться почти как отдельное приложение.
+      </div>
+      <p class="sub" style="margin-top:12px">Статистика отражает только сохранённые записи и не является диагнозом. Для латерализации отмечайте «правая сторона головы» или «левая сторона головы» в каждом дне с односторонней болью.</p>
+    </div>
+  </section>
+
+  <section class="report card" id="printReport">
+    <div class="tools no-print"><button class="btn primary" id="printBtn">Печать / сохранить PDF</button><button class="btn secondary" id="closeReport">Закрыть отчёт</button></div>
+    <h1>Мигрень в деталях — отчёт дневника головной боли</h1>
+    <div id="printSummary"></div>
+    <h2>Записи за месяц</h2>
+    <div id="printTable"></div>
+    <p style="font-size:9px;color:#647c89">Дневник предназначен для фиксации симптомов и не заменяет консультацию врача.</p>
+  </section>
+
+  <div class="footer">
+    <b>Мигрень в деталях</b><br>
+    *Информация носит ознакомительный характер. Решения о диагностике и лечении принимаются совместно с врачом.*
+  </div>
+</div>
+
+<script>
+const KEY="migraine-details-diary-v1";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const RU_MONTHS=["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+
+function localISO(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`}
+function monthISO(d=new Date()){return localISO(d).slice(0,7)}
+let storageProblem=false, dirty=false, currentDate=localISO();
+function validDate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s)||Number(s.slice(0,4))<1900)return false;const d=new Date(s+"T12:00:00");return !isNaN(d)&&localISO(d)===s}
+function validateRecords(d){
+ if(!d||Array.isArray(d)||typeof d!=="object")throw Error("Неверный формат копии");
+ const out={};
+ for(const [key,r] of Object.entries(d)){
+  if(!validDate(key)||!r||Array.isArray(r)||r.date!==key||!["yes","no"].includes(r.hadPain))throw Error("Неверная запись");
+  if(!Number.isInteger(r.intensity)||r.intensity<0||r.intensity>10)throw Error("Неверная интенсивность");
+  const clean={date:key,hadPain:r.hadPain,intensity:r.intensity};
+  for(const [field,selector] of [["locations","#locationGrid input"],["characters","#characterGrid input"],["symptoms","#symptomGrid input"]]){
+   const allowed=$$(selector).map(x=>x.value), v=r[field]??[];
+   if(!Array.isArray(v)||v.some(x=>!allowed.includes(x)))throw Error("Неверные варианты");clean[field]=[...new Set(v)];
+  }
+  for(const field of ["startTime","endTime","activity","medName","medEffect","notes"]){const v=r[field]??"";if(typeof v!=="string"||v.length>20000)throw Error("Неверное поле");clean[field]=v}
+  for(const f of ["startTime","endTime"])if(clean[f]&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(clean[f]))throw Error("Неверное время");
+  if(!["","yes","no"].includes(clean.activity)||!["","Помог полностью","Помог частично","Не помог"].includes(clean.medEffect))throw Error("Неверное значение");
+  if(clean.hadPain==="no")Object.assign(clean,{intensity:0,startTime:"",endTime:"",locations:[],characters:[],activity:"",symptoms:[],medName:"",medEffect:"",notes:""});
+  out[key]=clean;
+ }return out;
+}
+function loadAll(){try{const data=validateRecords(JSON.parse(localStorage.getItem(KEY)||"{}"));storageProblem=false;return data}catch(e){storageProblem=true;$("#status").textContent="Не удалось прочитать хранилище. Записи не перезаписаны. Попробуйте обычный Safari или восстановите проверенную копию.";return {}}}
+function saveAll(x){try{localStorage.setItem(KEY,JSON.stringify(x));storageProblem=false;return true}catch(e){$("#status").textContent="Не удалось сохранить: хранилище недоступно или заполнено. Запись остаётся в форме.";alert("Запись не сохранена. Проверьте доступ к хранилищу браузера и свободное место.");return false}}
+function canLeave(){return !dirty||confirm("Есть несохранённые изменения. Перейти на другую дату без сохранения?")}
+function openDate(date){if(!validDate(date)||!canLeave()){$("#entryDate").value=currentDate;return false}$("#entryDate").value=date;$("#monthPicker").value=date.slice(0,7);calCursor=date.slice(0,7);loadDate(date);renderSummary();renderCalendar();return true}
+function valRadio(name){const e=document.querySelector(`input[name="${name}"]:checked`);return e?e.value:""}
+function setRadio(name,v){$$(`input[name="${name}"]`).forEach(x=>x.checked=(x.value===v))}
+function vals(sel){return $$(sel).filter(x=>x.checked).map(x=>x.value)}
+function setVals(sel,a=[]){$$(sel).forEach(x=>x.checked=a.includes(x.value))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+function switchTab(id){
+  $$(".tabbar button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+  $$(".panel").forEach(p=>p.classList.toggle("active",p.id===id));
+  if(id==="calendar") renderCalendar();
+  if(id==="summary") renderSummary();
+}
+$$(".tabbar button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+
+function togglePain(){
+  const no=valRadio("hadPain")==="no";
+  $("#painFields").classList.toggle("hidden",valRadio("hadPain")!=="yes");
+  $("#noPainHint").classList.toggle("hidden",!no);
+}
+$$('input[name="hadPain"]').forEach(x=>x.onchange=togglePain);
+
+function clearForm(){
+  setRadio("hadPain",""); setRadio("activity","");
+  $("#intensity").value=5; $("#intensityOut").textContent="5";
+  $("#startTime").value=""; $("#endTime").value="";
+  setVals("#locationGrid input",[]); setVals("#characterGrid input",[]); setVals("#symptomGrid input",[]);
+  $("#medName").value=""; $("#medEffect").value=""; $("#notes").value=""; $("#status").textContent="";
+  togglePain();
+}
+function loadDate(date){
+  clearForm(); currentDate=date;dirty=false; const r=loadAll()[date]; if(!r)return;
+  setRadio("hadPain",r.hadPain||""); togglePain();
+  if(r.hadPain==="yes"){
+    $("#intensity").value=r.intensity??5; $("#intensityOut").textContent=r.intensity??5;
+    $("#startTime").value=r.startTime||""; $("#endTime").value=r.endTime||"";
+    setVals("#locationGrid input",r.locations||[]);
+    setVals("#characterGrid input",r.characters||[]);
+    setRadio("activity",r.activity||"");
+    setVals("#symptomGrid input",r.symptoms||[]);
+    $("#medName").value=r.medName||""; $("#medEffect").value=r.medEffect||""; $("#notes").value=r.notes||"";
+  }
+}
+function saveDate(){
+  const date=$("#entryDate").value, hp=valRadio("hadPain");
+  if(!validDate(date)){$("#status").textContent="Выберите корректную дату.";return}
+  if(!hp){$("#status").textContent="Сначала отметьте, была ли сегодня головная боль.";return}
+  const all=loadAll(); if(storageProblem)return; const r={date,hadPain:hp};
+  if(hp==="yes"){
+    Object.assign(r,{
+      intensity:Number($("#intensity").value), startTime:$("#startTime").value, endTime:$("#endTime").value,
+      locations:vals("#locationGrid input"), characters:vals("#characterGrid input"), activity:valRadio("activity"),
+      symptoms:vals("#symptomGrid input"), medName:$("#medName").value.trim(),
+      medEffect:$("#medEffect").value, notes:$("#notes").value.trim()
+    });
+  }else Object.assign(r,{intensity:0,locations:[],characters:[],activity:"",symptoms:[],medName:"",medEffect:"",notes:""});
+  all[date]=r; if(!saveAll(all))return;dirty=false;
+  $("#status").textContent="Сохранено на этом устройстве.";
+  $("#monthPicker").value=date.slice(0,7); calCursor=date.slice(0,7);
+  renderSummary(); renderCalendar();
+}
+function deleteDate(){
+  const date=$("#entryDate").value, all=loadAll();
+  if(storageProblem)return;
+  if(all[date]&&confirm("Удалить запись за "+date+"?")){delete all[date];if(!saveAll(all))return;dirty=false;clearForm();$("#status").textContent="Запись удалена.";renderSummary();renderCalendar()}
+}
+function moveDay(n){
+  const d=new Date(($("#entryDate").value||localISO())+"T12:00:00"); d.setDate(d.getDate()+n);
+  openDate(localISO(d));
+}
+$("#prevDay").onclick=()=>moveDay(-1); $("#nextDay").onclick=()=>moveDay(1);
+$("#intensity").oninput=e=>$("#intensityOut").textContent=e.target.value;
+$("#saveBtn").onclick=saveDate; $("#deleteBtn").onclick=deleteDate;
+$("#entryDate").onchange=e=>openDate(e.target.value);
+
+let calCursor=monthISO();
+function shiftMonth(s,n){
+  const [y,m]=s.split("-").map(Number); const d=new Date(y,m-1+n,1); return monthISO(d)
+}
+$("#prevMonth").onclick=()=>{calCursor=shiftMonth(calCursor,-1);renderCalendar()};
+$("#nextMonth").onclick=()=>{calCursor=shiftMonth(calCursor,1);renderCalendar()};
+
+function renderCalendar(){
+  const [y,m]=calCursor.split("-").map(Number);
+  $("#calendarMonthTitle").textContent=`${RU_MONTHS[m-1]} ${y}`;
+  const grid=$("#calendarGrid");grid.innerHTML="";
+  const first=new Date(y,m-1,1), last=new Date(y,m,0), days=last.getDate();
+  let start=(first.getDay()+6)%7;
+  const prevLast=new Date(y,m-1,0).getDate();
+  const all=loadAll(), today=localISO();
+  const cells=Math.ceil((start+days)/7)*7;
+  for(let i=0;i<cells;i++){
+    let day=i-start+1, cy=y, cm=m, muted=false;
+    if(day<1){day=prevLast+day; cm=m-1; if(cm<1){cm=12;cy=y-1} muted=true}
+    else if(day>days){day=day-days; cm=m+1;if(cm>12){cm=1;cy=y+1} muted=true}
+    const date=`${cy}-${String(cm).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const r=all[date], b=document.createElement("button");
+    b.className="daycell"+(muted?" muted":"")+(date===today?" today":"")+(r?.hadPain==="yes"?" pain":"")+(r?.hadPain==="no"?" nopaincell":"");
+    b.innerHTML=`<span>${day}</span>${r?'<i class="dot"></i>':""}${r?.hadPain==="yes"?`<small class="score">${r.intensity}/10</small>`:""}`;
+    b.setAttribute("aria-label",`${date}: ${r?.hadPain==="yes"?"головная боль, "+r.intensity+" из 10":r?.hadPain==="no"?"боли не было":"нет записи"}`);
+    b.onclick=()=>{if(openDate(date))switchTab("today")};
+    grid.appendChild(b);
+  }
+}
+
+function monthRows(month){
+  return Object.values(loadAll()).filter(r=>r.date?.startsWith(month)).sort((a,b)=>a.date.localeCompare(b.date))
+}
+function summaryData(month){
+  const rows=monthRows(month), pain=rows.filter(r=>r.hadPain==="yes"), noPain=rows.filter(r=>r.hadPain==="no");
+  const ints=pain.map(r=>Number(r.intensity||0)).filter(Number.isFinite);
+  return {
+    rows,pain,noPain,
+    avg:ints.length?(ints.reduce((a,b)=>a+b,0)/ints.length).toFixed(1):"—",
+    meds:pain.filter(r=>(r.medName||"").trim()).length,
+    right:pain.filter(r=>(r.locations||[]).includes("Правая сторона головы")).length,
+    left:pain.filter(r=>(r.locations||[]).includes("Левая сторона головы")).length,
+    allhead:pain.filter(r=>(r.locations||[]).includes("Вся голова")).length
+  };
+}
+function renderSummary(){
+  const month=$("#monthPicker").value||monthISO(), s=summaryData(month);
+  $("#filledDays").textContent=s.rows.length; $("#sumPainDays").textContent=s.pain.length; $("#sumAvgIntensity").textContent=s.avg;
+  $("#sumMedDays").textContent=s.meds; $("#sumPainFree").textContent=s.noPain.length;
+  $("#sumRight").textContent=s.right;$("#sumLeft").textContent=s.left;$("#sumAll").textContent=s.allhead;
+  const box=$("#records");box.innerHTML="";
+  if(!s.rows.length){box.innerHTML='<div class="sub" style="margin-top:12px">За этот месяц пока нет сохранённых записей.</div>';return}
+  for(const r of s.rows){
+    const meta=r.hadPain==="no"?"Головной боли не было":`Интенсивность ${r.intensity}/10${(r.locations||[]).length?" · "+esc((r.locations||[]).join(", ")):""}${r.medName?" · "+esc(r.medName):""}`;
+    const el=document.createElement("div");el.className="record";
+    el.innerHTML=`<div class="rd">${r.date.slice(8,10)}.${r.date.slice(5,7)}</div><div class="rm">${meta}</div><button class="iconbtn">✎</button>`;
+    el.querySelector("button").setAttribute("aria-label","Редактировать "+r.date);el.querySelector("button").onclick=()=>{if(openDate(r.date))switchTab("today")};box.appendChild(el)
+  }
+}
+$("#monthPicker").onchange=e=>{calCursor=e.target.value||monthISO();renderSummary();renderCalendar()};
+
+function csvEsc(v){if(typeof v==="string"&&/^[\s]*[=+@-]/.test(v))v="'"+v;return '"'+String(v??"").replace(/"/g,'""')+'"'}
+function download(name,content,type){const blob=new Blob([content],{type}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000)}
+$("#exportCsv").onclick=()=>{
+  const month=$("#monthPicker").value||monthISO(), rows=monthRows(month);
+  const head=["Дата","Головная боль","Интенсивность","Начало","Окончание","Локализация","Характер боли","Физическая активность","Симптомы","Лекарство","Эффект","Примечания"];
+  const data=[head.map(csvEsc).join(";")];
+  rows.forEach(r=>data.push([r.date,r.hadPain==="yes"?"Да":"Нет",r.intensity??"",r.startTime??"",r.endTime??"",(r.locations||[]).join(", "),(r.characters||[]).join(", "),r.activity==="yes"?"Да":r.activity==="no"?"Нет":"",(r.symptoms||[]).join(", "),r.medName||"",r.medEffect||"",r.notes||""].map(csvEsc).join(";")));
+  download(`migraine-diary-${month}.csv`,"\ufeff"+data.join("\n"),"text/csv;charset=utf-8")
+};
+$("#exportJson").onclick=()=>{const raw=localStorage.getItem(KEY)||"{}";download("migraine-diary-backup.json",raw,"application/json")};
+$("#importJson").onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  if(f.size>5*1024*1024)throw Error("Копия больше 5 МБ");
+  const d=validateRecords(JSON.parse(await f.text()));const all=loadAll();
+  if(storageProblem)throw Error("Сначала сохраните исходную копию повреждённого хранилища. Восстановление доступно в чистом браузере.");
+  if(!canLeave())return;
+  const overlaps=Object.keys(d).filter(k=>all[k]).length;
+  if(!confirm(`Восстановить ${Object.keys(d).length} записей? Совпадающих дат: ${overlaps}. Они будут заменены записями из копии. Остальные дни сохранятся.`))return;
+  if(!saveAll({...all,...d}))return;
+  loadDate(currentDate);renderSummary();renderCalendar();alert("Резервная копия восстановлена.");
+ }catch(err){alert("Копия не восстановлена. Текущие записи не изменены. "+err.message)}finally{e.target.value=""}
+};
+$("#doctorReport").onclick=()=>{
+  const month=$("#monthPicker").value||monthISO(), s=summaryData(month);
+  $("#printSummary").innerHTML=`<p><b>Месяц:</b> ${esc(month)} &nbsp; <b>Заполнено дней:</b> ${s.rows.length} &nbsp; <b>Дней с головной болью:</b> ${s.pain.length} &nbsp; <b>Средняя интенсивность:</b> ${s.avg} &nbsp; <b>Дней приёма лекарств:</b> ${s.meds}</p><p><b>Сторона:</b> справа ${s.right}, слева ${s.left}, вся голова ${s.allhead}</p>`;
+  let t='<table><thead><tr><th style="width:24%">Дата</th><th>Запись</th></tr></thead><tbody>';
+  s.rows.forEach(r=>{
+   const details=r.hadPain==="no"?"Головной боли не было":`<b>Головная боль:</b> ${r.intensity}/10<br><b>Начало / окончание:</b> ${esc(r.startTime||"—")} / ${esc(r.endTime||"—")}<br><b>Локализация:</b> ${esc(r.locations.join(", "))||"—"}<br><b>Характер:</b> ${esc(r.characters.join(", "))||"—"}<br><b>Усиление при активности:</b> ${r.activity==="yes"?"Да":r.activity==="no"?"Нет":"Не указано"}<br><b>Симптомы:</b> ${esc(r.symptoms.join(", "))||"—"}<br><b>Лекарства и эффект:</b> ${esc([r.medName,r.medEffect].filter(Boolean).join(" — "))||"—"}<br><b>Триггеры / примечания:</b> ${esc(r.notes)||"—"}`;
+   t+=`<tr><td>${esc(r.date)}</td><td>${details}</td></tr>`;
+  });
+  t+="</tbody></table>";$("#printTable").innerHTML=t;
+  $("#printSummary").insertAdjacentHTML("beforeend",`<p><b>Дней без головной боли:</b> ${s.noPain.length}. Незаполненные дни не считаются днями без боли. Средняя интенсивность рассчитана по дням с болью. Стороны могут отмечаться одновременно.</p>`);
+  $("#printReport").classList.add("preview");$("#printReport").scrollIntoView({behavior:"smooth"});
+};
+
+$("#printBtn").onclick=()=>window.print();
+$("#closeReport").onclick=()=>$("#printReport").classList.remove("preview");
+for(const field of $$("#today input, #today select, #today textarea")){
+ if(field.id!=="entryDate"){field.addEventListener("input",()=>dirty=true);field.addEventListener("change",()=>dirty=true)}
+}
+window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
+window.addEventListener("storage",e=>{if(e.key===KEY){if(!dirty)loadDate(currentDate);renderCalendar();renderSummary()}});
+$("#entryDate").value=localISO();$("#monthPicker").value=monthISO();
+loadDate(localISO());renderCalendar();renderSummary();
+
+if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
